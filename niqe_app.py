@@ -207,11 +207,26 @@ if uploaded_files:
         
         with tab1:
             st.markdown("### Detailed Results")
-            # Display interactive dataframe (sortable, filterable)
+            
+            # Use Streamlit's native ProgressColumn to visualize the score
+            # Lower NIQE is better, but ProgressColumn fills from 0 to Max.
+            # We will just show the value as a number formatted nicely, 
+            # and maybe a 'Quality Bar' if we normalize it, but simple is better for stability.
+            
             st.dataframe(
-                df[["Filename", "NIQE Score", "Resolution"]].style.background_gradient(subset=["NIQE Score"], cmap="RdYlGn_r"),
+                df[["Filename", "NIQE Score", "Resolution"]],
                 use_container_width=True,
-                height=400
+                height=400,
+                column_config={
+                    "NIQE Score": st.column_config.ProgressColumn(
+                        "NIQE Score (Lower is Better)",
+                        help="The NIQE score for the image. Lower values indicate better naturalness.",
+                        format="%.4f",
+                        min_value=0,
+                        max_value=max(df["NIQE Score"].max() + 5, 20), # Dynamic max
+                    ),
+                    "Resolution": st.column_config.TextColumn("Resolution")
+                }
             ) 
             
             # Download CSV button
