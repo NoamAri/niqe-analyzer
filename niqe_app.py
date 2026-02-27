@@ -264,6 +264,6 @@ if uploaded_files:
 
 else:
     # Empty state
-    st.info("� Upload images in the sidebar to begin analysis.")
+    st.info("Upload images in the sidebar to begin analysis.")
 
 
